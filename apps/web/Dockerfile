@@ -5,10 +5,18 @@ WORKDIR /app
 COPY package.json .
 COPY bun.lockb* .
 
-RUN bun install
+# Create entrypoint script
+COPY <<EOF /entrypoint.sh
+#!/bin/sh
+if [ ! -d "node_modules" ] || [ ! -f "node_modules/.package-lock.json" ]; then
+  echo "Installing dependencies..."
+  bun install
+fi
+bun run dev --host
+EOF
 
-COPY . .
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 5173
 
-CMD ["bun", "run", "dev", "--host"]
+ENTRYPOINT ["/entrypoint.sh"]

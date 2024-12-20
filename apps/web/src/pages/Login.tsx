@@ -6,21 +6,21 @@ import {
   Button,
   Typography,
   Alert,
+  CircularProgress
 } from '@mui/material'
 import { useAuth } from '../contexts/AuthContext'
 
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const { login } = useAuth()
+  const { login, isLoading, error } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       await login(email, password)
     } catch (err) {
-      setError('Invalid email or password')
+      // Error is handled by the auth hook
     }
   }
 
@@ -35,7 +35,7 @@ function Login() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Sign in not good
+          Sign in to your account
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           {error && (
@@ -54,6 +54,7 @@ function Login() {
             autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={isLoading}
           />
           <TextField
             margin="normal"
@@ -66,14 +67,23 @@ function Login() {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={isLoading}
           >
-            Sign In
+            {isLoading ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CircularProgress size={20} color="inherit" />
+                <span>Signing in...</span>
+              </Box>
+            ) : (
+              'Sign In'
+            )}
           </Button>
         </Box>
       </Box>

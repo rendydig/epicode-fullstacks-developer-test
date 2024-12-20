@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@directus/sdk": "^13.0.2",
+    "@directus/sdk": "^18.0.3",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.20",
+    "@tanstack/react-query": "^5.62.8",
+    "axios": "^1.7.9",
+    "jotai": "^2.10.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.1",

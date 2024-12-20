@@ -2,8 +2,8 @@
 
 ## 1. Technology Stack Setup
 - [x] Nx/Turborepo configuration
-- [ ] Directus headless CMS setup
-- [ ] PostgreSQL database setup
+- [x] Directus headless CMS setup
+- [x] PostgreSQL database setup
 - [x] Docker environment
 - [x] Bun package manager integration
 - [x] React + Vite frontend setup

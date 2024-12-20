@@ -1,70 +1,97 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { createDirectus, authentication, rest } from '@directus/sdk'
+import { ReactNode, useEffect } from 'react'
+import { useAtom } from 'jotai'
+import {
+  authDataAtom,
+  userAtom,
+  isLoadingAtom,
+  errorAtom,
+  authActions,
+  type User
+} from '../lib/directus'
 
-interface AuthContextType {
-  isAuthenticated: boolean
-  user: any | null
-  login: (email: string, password: string) => Promise<void>
-  logout: () => Promise<void>
+interface AuthContextProps {
+  children: ReactNode
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
-const client = createDirectus(import.meta.env.VITE_API_URL)
-  .with(authentication())
-  .with(rest())
-
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<any | null>(null)
+export function AuthProvider({ children }: AuthContextProps) {
+  const [authData, setAuthData] = useAtom(authDataAtom)
+  const [, setUser] = useAtom(userAtom)
+  const [, setLoading] = useAtom(isLoadingAtom)
+  const [, setError] = useAtom(errorAtom)
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const initAuth = async () => {
+      // Don't try to refresh if we don't have a refresh token
+      if (!authData?.refresh_token) {
+        setLoading(false)
+        return
+      }
+
+      setLoading(true)
       try {
-        const response = await client.request(authentication.refresh())
-        setIsAuthenticated(true)
-        setUser(response.user)
+        const { auth, user } = await authActions.refresh()
+        setAuthData({
+          access_token: auth.access_token,
+          refresh_token: auth.refresh_token
+        })
+        setUser(user)
+        setError(null)
       } catch (error) {
-        setIsAuthenticated(false)
+        setAuthData(null)
         setUser(null)
+      } finally {
+        setLoading(false)
       }
     }
-    checkAuth()
-  }, [])
+
+    initAuth()
+  }, [authData?.refresh_token, setAuthData, setUser, setLoading, setError])
+
+  return <>{children}</>
+}
+
+export function useAuth() {
+  const [authData, setAuthData] = useAtom(authDataAtom)
+  const [user, setUser] = useAtom(userAtom)
+  const [isLoading, setLoading] = useAtom(isLoadingAtom)
+  const [error, setError] = useAtom(errorAtom)
 
   const login = async (email: string, password: string) => {
+    setLoading(true)
+    setError(null)
     try {
-      const response = await client.request(
-        authentication.login(email, password)
-      )
-      setIsAuthenticated(true)
-      setUser(response.user)
+      const { auth, user } = await authActions.login(email, password)
+      setAuthData({
+        access_token: auth.access_token,
+        refresh_token: auth.refresh_token
+      })
+      setUser(user)
     } catch (error) {
-      throw new Error('Login failed')
+      setError('Invalid email or password')
+      throw error
+    } finally {
+      setLoading(false)
     }
   }
 
   const logout = async () => {
+    setLoading(true)
     try {
-      await client.request(authentication.logout())
-      setIsAuthenticated(false)
+      await authActions.logout()
+    } finally {
+      setAuthData(null)
       setUser(null)
-    } catch (error) {
-      console.error('Logout failed:', error)
+      setLoading(false)
+      setError(null)
     }
   }
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  )
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+  return {
+    isAuthenticated: !!authData?.access_token,
+    user,
+    isLoading,
+    error,
+    login,
+    logout
   }
-  return context
 }
