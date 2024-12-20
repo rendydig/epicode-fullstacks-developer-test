@@ -10,14 +10,17 @@ export interface Organization {
 }
 
 export interface Role {
+  id: string
   name: 'admin' | 'student'
 }
 
 export interface User {
-  id: string
-  email: string
-  role: Role
-  organizations?: Organization[]
+  data: {
+    id: string
+    email: string
+    role: Role
+    organizations?: Organization[]
+  }
 }
 
 export interface Course {
@@ -37,11 +40,10 @@ export interface Schema {
 // Create axios instance
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true
 })
 
 // Create a typed Directus client
-export const directus = createDirectus<Schema>(import.meta.env.VITE_API_URL, {
+const directus = createDirectus<Schema>(import.meta.env.VITE_API_URL, {
   credentials: 'include',
   mode: 'cors'
 })
@@ -64,12 +66,12 @@ export const isLoadingAtom = atom<boolean>(false)
 export const errorAtom = atom<string | null>(null)
 
 // Helper atoms for role checks
-export const isAdminAtom = atom((get) => get(userAtom)?.role?.name === 'admin')
-export const isStudentAtom = atom((get) => get(userAtom)?.role?.name === 'student')
+export const isAdminAtom = atom((get) => get(userAtom)?.role?.name?.toLocaleLowerCase() === 'admin')
+export const isStudentAtom = atom((get) => get(userAtom)?.role?.name?.toLocaleLowerCase() === 'student')
 
 // Auth actions
 export const authActions = {
-  login: async (email: string, password: string) => {
+  async login(email: string, password: string) {
     try {
       const client = directus as AuthenticationClient<Schema>
       const auth = await client.login(email, password)
@@ -77,21 +79,17 @@ export const authActions = {
       // Set the token for subsequent requests
       api.defaults.headers.common['Authorization'] = `Bearer ${auth.access_token}`
       
-      // Fetch user data with axios
-      const { data } = await api.get('/users/me', {
-        params: {
-          fields: ['id', 'email', 'role.name', 'organizations.id', 'organizations.name']
-        }
-      })
+      // Fetch user data
+      const user = await fetchCurrentUser()
       
-      return { auth, user: data.data }
+      return { auth, user }
     } catch (error) {
       console.error('Login error:', error)
       throw error
     }
   },
 
-  logout: async () => {
+  async logout() {
     try {
       const client = directus as AuthenticationClient<Schema>
       await client.logout()
@@ -103,7 +101,7 @@ export const authActions = {
     }
   },
 
-  refresh: async () => {
+  async refresh() {
     try {
       const client = directus as AuthenticationClient<Schema>
       const auth = await client.refresh()
@@ -111,19 +109,25 @@ export const authActions = {
       // Set the token for subsequent requests
       api.defaults.headers.common['Authorization'] = `Bearer ${auth.access_token}`
       
-      // Fetch user data with axios
-      const { data } = await api.get('/users/me', {
-        params: {
-          fields: ['id', 'email', 'role.name', 'organizations.id', 'organizations.name']
-        }
-      })
+      // Fetch user data
+      const user = await fetchCurrentUser()
       
-      return { auth, user: data.data }
+      return { auth, user }
     } catch (error) {
       console.error('Refresh error:', error)
       throw error
     }
   }
+}
+
+// Helper function to fetch current user
+export async function fetchCurrentUser() {
+  const { data } = await api.get<User>('/users/me', {
+    params: {
+      fields: ['id', 'email', 'role.id', 'role.name', 'organizations.id', 'organizations.name']
+    }
+  })
+  return data
 }
 
 // Export the axios instance for use in other parts of the app

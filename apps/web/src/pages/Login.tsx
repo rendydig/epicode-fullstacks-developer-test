@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { useNavigate, Navigate } from 'react-router-dom'
 import {
   Container,
   Box,
@@ -13,15 +14,22 @@ import { useAuth } from '../contexts/AuthContext'
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { login, isLoading, error } = useAuth()
+  const navigate = useNavigate()
+  const { login, isLoading, error, isAuthenticated, user } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       await login(email, password)
+      const isAdmin = user?.data?.role?.name.toLowerCase() === 'admin'
+      navigate(isAdmin ? '/admin/courses' : '/courses')
     } catch (err) {
-      // Error is handled by the auth hook
+      console.log({error: err})
     }
+  }
+  if (isAuthenticated) {
+    const isAdmin = user?.data?.role?.name.toLowerCase() === 'admin'
+    return <Navigate to={isAdmin ? '/admin/courses' : '/courses'} replace />
   }
 
   return (

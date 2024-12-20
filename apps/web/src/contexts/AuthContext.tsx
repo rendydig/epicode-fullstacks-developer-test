@@ -1,74 +1,67 @@
-import { ReactNode, useEffect } from 'react'
+import React, { createContext, useContext, useEffect, useCallback, ReactNode } from 'react'
 import { useAtom } from 'jotai'
-import {
-  authDataAtom,
-  userAtom,
-  isLoadingAtom,
-  errorAtom,
-  authActions,
-  type User
-} from '../lib/directus'
+import { authDataAtom, userAtom, isLoadingAtom, errorAtom } from '../atoms/auth'
+import { authActions, fetchCurrentUser, type User } from '../lib/directus'
+import { isTokenExpired } from '../lib/auth'
 
-interface AuthContextProps {
+interface AuthContextType {
+  user: User | null
+  isAuthenticated: boolean
+  isLoading: boolean
+  error: string | null
+  login: (email: string, password: string) => Promise<void>
+  logout: () => Promise<void>
+  token: string | null
+}
+
+const AuthContext = createContext<AuthContextType | null>(null)
+
+interface AuthProviderProps {
   children: ReactNode
 }
 
-export function AuthProvider({ children }: AuthContextProps) {
+export function AuthProvider({ children }: AuthProviderProps) {
   const [authData, setAuthData] = useAtom(authDataAtom)
-  const [, setUser] = useAtom(userAtom)
-  const [, setLoading] = useAtom(isLoadingAtom)
-  const [, setError] = useAtom(errorAtom)
-
-  useEffect(() => {
-    const initAuth = async () => {
-      // Don't try to refresh if we don't have a refresh token
-      if (!authData?.refresh_token) {
-        setLoading(false)
-        return
-      }
-
-      setLoading(true)
-      try {
-        const { auth, user } = await authActions.refresh()
-        setAuthData({
-          access_token: auth.access_token,
-          refresh_token: auth.refresh_token
-        })
-        setUser(user)
-        setError(null)
-      } catch (error) {
-        setAuthData(null)
-        setUser(null)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    initAuth()
-  }, [authData?.refresh_token, setAuthData, setUser, setLoading, setError])
-
-  return <>{children}</>
-}
-
-export function useAuth() {
-  const [authData, setAuthData] = useAtom(authDataAtom)
-  const [user, setUser] = useAtom(userAtom)
   const [isLoading, setLoading] = useAtom(isLoadingAtom)
   const [error, setError] = useAtom(errorAtom)
+
+  // Check token expiration periodically
+  useEffect(() => {
+    if (!authData) return
+
+    // Check immediately
+    if (isTokenExpired(authData)) {
+      setAuthData(null)
+      return
+    }
+
+    // Calculate time until expiration
+    const expiresAt = new Date(authData.auth.expires_at).getTime()
+    const timeUntilExpiry = expiresAt - Date.now()
+    
+
+    // Set up timer to check again just before expiration
+    const timer = setTimeout(() => {
+      if (isTokenExpired(authData)) {
+        setAuthData(null)
+      }
+    }, Math.max(0, timeUntilExpiry - 5000)) // Check 5 seconds before expiration
+
+    return () => clearTimeout(timer)
+  }, [authData, setAuthData])
 
   const login = async (email: string, password: string) => {
     setLoading(true)
     setError(null)
+
     try {
-      const { auth, user } = await authActions.login(email, password)
-      setAuthData({
-        access_token: auth.access_token,
-        refresh_token: auth.refresh_token
-      })
-      setUser(user)
-    } catch (error) {
-      setError('Invalid email or password')
-      throw error
+      const authData = await authActions.login(email, password)
+      console.log({authDataSet: authData})
+      setAuthData(authData)
+    } catch (err) {
+      console.error('Error during login:', err)
+      setError(err instanceof Error ? err.message : 'Login failed')
+      throw err
     } finally {
       setLoading(false)
     }
@@ -78,20 +71,34 @@ export function useAuth() {
     setLoading(true)
     try {
       await authActions.logout()
+    } catch (err) {
+      console.error('Error during logout:', err)
     } finally {
       setAuthData(null)
-      setUser(null)
-      setLoading(false)
       setError(null)
+      setLoading(false)
     }
   }
 
-  return {
-    isAuthenticated: !!authData?.access_token,
-    user,
+  const isAuthenticated = !!authData?.auth?.access_token && !isTokenExpired(authData)
+  
+  const value = {
+    user: authData?.user,
+    isAuthenticated,
     isLoading,
+    token: isAuthenticated ? authData?.auth?.access_token : null,
     error,
     login,
     logout
   }
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+  return context
 }

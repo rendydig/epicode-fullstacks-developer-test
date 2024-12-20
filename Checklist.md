@@ -16,11 +16,11 @@
 - [x] .env.example file
 
 ## 3. Database Architecture
-- [ ] Organizations table
-- [ ] Users table with multi-organization support
-- [ ] Courses table
-- [ ] Enrollments table
-- [ ] Proper relationships between tables
+- [x] Organizations table
+- [x] Users table with multi-organization support
+- [x] Courses table
+- [x] Enrollments table
+- [x] Proper relationships between tables
 
 ## 4. User Roles & Permissions
 ### Admin Role

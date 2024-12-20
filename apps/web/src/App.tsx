@@ -1,26 +1,46 @@
+import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useAuth } from './contexts/AuthContext'
-import Layout from './components/Layout'
+import { AuthProvider } from './contexts/AuthContext'
 import Login from './pages/Login'
 import Courses from './pages/Courses'
-import ProtectedRoute from './components/ProtectedRoute'
+import { CourseDetail } from './pages/CourseDetail'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { Header } from './components/Header'
+import { ManageCourses } from './pages/admin/ManageCourses'
 
 function App() {
-  const { isAuthenticated } = useAuth()
-
   return (
-    <Routes>
-      <Route path="/login" element={
-        isAuthenticated ? <Navigate to="/courses" replace /> : <Login />
-      } />
-      
-      <Route element={<ProtectedRoute />}>
-        <Route element={<Layout />}>
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/" element={<Navigate to="/courses" replace />} />
-        </Route>
-      </Route>
-    </Routes>
+    <AuthProvider>
+      <Header />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/courses"
+          element={
+            <ProtectedRoute>
+              <Courses />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/courses/:courseId"
+          element={
+            <ProtectedRoute>
+              <CourseDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/courses"
+          element={
+            <ProtectedRoute adminOnly>
+              <ManageCourses />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/" element={<Navigate to="/courses" replace />} />
+      </Routes>
+    </AuthProvider>
   )
 }
 

@@ -63,6 +63,37 @@ System must be ready to run with single command:
 docker-compose up
 ```
 
+## Sample Data
+
+The application comes with pre-configured sample data for testing:
+
+### Organizations
+- Tech Academy
+- Code School
+- Data Science Institute
+
+### Users
+1. Admin User
+   - Email: admin@example.com
+   - Password: password123
+   - Role: Administrator
+
+2. Student Users
+   - student1@example.com (password: password123)
+   - student2@example.com (password: password123)
+
+### Courses
+1. Introduction to Programming (Tech Academy)
+2. Web Development Fundamentals (Tech Academy)
+3. Advanced React (Code School)
+4. Data Science Basics (Data Science Institute)
+
+To reset the database with sample data:
+1. Stop all containers: `docker-compose down -v`
+2. Start the services again: `docker-compose up -d`
+
+The sample data will be automatically loaded when the PostgreSQL container initializes for the first time.
+
 # Evaluation Points
 
 -  One-command setup functionality

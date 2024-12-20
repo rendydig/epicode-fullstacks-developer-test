@@ -3,18 +3,18 @@ import { api } from '../lib/directus'
 import type { Course } from '../lib/directus'
 import { useAuth } from '../contexts/AuthContext'
 
-export const useCourses = () => {
+export const useAdminCourses = () => {
   const { isAuthenticated, token } = useAuth()
   // Get auth token from localStorage
   return useQuery({
     queryKey: ['courses'],
     queryFn: async () => {
-      const { data } = await api.get('/items/courses', {
+      const { data } = await api.get('/items/epicode_courses', {
         headers: {
           Authorization: `Bearer ${token}`
         },
         params: {
-          fields: ['id', 'name', 'description', 'organization_id.name']
+          fields: "*.*.*"
         }
       })
       return data.data as Course[]
