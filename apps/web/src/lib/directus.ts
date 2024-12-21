@@ -112,10 +112,10 @@ export const authActions = {
 
   async logout() {
     try {
-      const client = directus as AuthenticationClient<Schema>;
-      await client.logout();
+      // const client = directus as AuthenticationClient<Schema>;
+      // await client.logout();
       // Clear the authorization header
-      delete api.defaults.headers.common["Authorization"];
+      // delete api.defaults.headers.common["Authorization"];
     } catch (error) {
       console.error("Logout error:", error);
       throw error;
