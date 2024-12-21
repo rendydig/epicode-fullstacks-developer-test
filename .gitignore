@@ -43,6 +43,6 @@ yarn-error.log*
 directus/uploads/*
 !directus/uploads/.gitkeep
 !directus/extensions/.gitkeep
-
+directus/logs/*
 # Database
 postgres_data/
