@@ -1,22 +1,9 @@
 import { defineHook } from '@directus/extensions-sdk';
-import { appendFileSync } from 'fs';
-import { join } from 'path';
+import { logToFile } from './utils';
 
-const LOG_FILE = '/directus/logs/enrollments.log';
-
-function logToFile(message: string) {
-  const timestamp = new Date().toISOString();
-  const logMessage = `[${timestamp}] ${message}\n`;
-  try {
-    appendFileSync(LOG_FILE, logMessage);
-  } catch (error) {
-    console.error('Error writing to log file:', error);
-  }
-}
-
-export default defineHook(({ filter, action }, { services, database, getSchema }) => {
+export default defineHook(({ filter, action }, { services, getSchema }) => {
   // Log enrollment creation
-  action('enrollments.items.create', async ({ payload, key, collection }) => {
+  action('enrollments.items.create', async ({ payload}) => {
     const { ItemsService } = services;
     const schema = await getSchema();
     
@@ -36,7 +23,7 @@ export default defineHook(({ filter, action }, { services, database, getSchema }
         `Course: ${course.name}`,
         `Status: ${payload.status}`,
         '',
-        ' Simulated email sent to:',
+        'Simulated email sent to:',
         `To: ${user.email}`,
         `Subject: Welcome to ${course.name}!`,
         'Body: Your enrollment has been confirmed.',
@@ -70,14 +57,14 @@ export default defineHook(({ filter, action }, { services, database, getSchema }
 
       // Log enrollment data and email simulation
       const logEntry = [
-        '🔍 Pre-deletion Enrollment Data:',
+        'Pre-deletion Enrollment Data:',
         `Enrollment ID: ${payloadID}`,
         `User: ${user.email}`,
         `Course: ${course.name}`,
         `Status: ${enrollment.status}`,
         `Created at: ${enrollment.date_created}`,
         '',
-        '📧 Email Simulation - Unenrollment Notice:',
+        'Email Simulation - Unenrollment Notice:',
         `To: ${user.email}`,
         `Subject: Unenrollment from ${course.name}`,
         'Body: Your unenrollment request is being processed.',
