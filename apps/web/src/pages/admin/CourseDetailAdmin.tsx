@@ -107,7 +107,7 @@ export function CourseDetailAdmin() {
               </Typography>
             </Box>
             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              Organization: {course.organization?.name}
+              Organization: {course?.organization?.name}
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Typography variant="h6" gutterBottom>

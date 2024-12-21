@@ -47,7 +47,7 @@ export function EnrolledCourses() {
                 {enrollment.course_id.description}
               </Typography>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                Organization: {enrollment.course_id.organization_id.name}
+                Organization: {enrollment.course_id.organization.name}
               </Typography>
               <Chip
                 label={enrollment.status}
@@ -57,8 +57,14 @@ export function EnrolledCourses() {
               />
             </CardContent>
             <CardActions>
-              <Button size="small" onClick={() => navigate(`/courses/${enrollment.course_id.id}`)}>
-                Continue Learning
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={() => navigate(`/courses/${enrollment.course_id.id}`)}
+                sx={{ mt: 1 }}
+              >
+                Course Details
               </Button>
             </CardActions>
           </Card>

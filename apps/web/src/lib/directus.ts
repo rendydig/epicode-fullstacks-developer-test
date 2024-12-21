@@ -15,12 +15,10 @@ export interface Role {
 }
 
 export interface User {
-  data: {
-    id: string
-    email: string
-    role: Role
-    organizations?: Organization[]
-  }
+  id: string
+  email: string
+  role: Role
+  organizations?: Organization[]
 }
 
 export interface Course {
@@ -41,14 +39,9 @@ export interface Schema {
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 })
+const directus = createDirectus<Schema>(import.meta.env.VITE_API_URL).with(authentication())
+.with(rest())
 
-// Create a typed Directus client
-const directus = createDirectus<Schema>(import.meta.env.VITE_API_URL, {
-  credentials: 'include',
-  mode: 'cors'
-})
-  .with(authentication())
-  .with(rest())
 
 // Store auth data in localStorage to persist sessions
 export const authDataAtom = atomWithStorage<{

@@ -23,7 +23,7 @@ export function useUserOrganizations() {
   const { isAuthenticated, token, user } = useAuth()
 
   return useQuery({
-    queryKey: ['userOrganizations', user?.data.id],
+    queryKey: ['userOrganizations', user?.id],
     queryFn: async () => {
       const { data } = await api.get<{ data: UserOrganization[] }>('/items/user_organizations', {
         headers: {
@@ -42,6 +42,6 @@ export function useUserOrganizations() {
       })
       return data.data
     },
-    enabled: !!token && isAuthenticated && !!user?.data?.id,
+    enabled: !!token && isAuthenticated && !!user?.id,
   })
 }

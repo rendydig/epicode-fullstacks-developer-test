@@ -24,27 +24,72 @@
 
 ## 4. User Roles & Permissions
 ### Admin Role
-- [ ] Course enrollment functionality
-- [ ] Course unenrollment functionality
-- [ ] View all courses capability
+- [x] Course enrollment functionality
+- [x] Course unenrollment functionality
+- [x] View all courses capability
 
 ### Student Role
-- [ ] View accessible courses only
-- [ ] Enrollment modification restrictions
+- [x] View accessible courses only
+- [x] Enrollment modification restrictions
 
 ## 5. Directus Implementation
 ### Protected API Endpoints
-- [ ] List available courses endpoint (both roles)
-- [ ] Enroll in course endpoint (admin only)
-- [ ] Unenroll from course endpoint (admin only)
-- [x] JWT authentication implementation
+- [x] List available courses (both roles)
+- [ ] Enroll in a course (admin only)
+- [ ] Unenroll from a course (admin only)
+- [x] JWT authentication required
 
-### Enrollment Events Hook
+### Custom TypeScript Extensions
+- [ ] Type definitions for API responses
+- [ ] Type definitions for request payloads
+- [ ] Custom hooks with TypeScript support
+
+### Event Hooks
 - [ ] Email notification simulation
 - [ ] Enrollment trigger
 - [ ] Unenrollment trigger
 
-## 6. Frontend Implementation
+### Security
+- [x] Role-based access control
+- [x] Protected API endpoints
+- [x] JWT token validation
+- [ ] Input validation and sanitization
+
+## 6. Sample Data
+### Organizations
+- [x] Tech Academy
+- [x] Code School
+- [x] Data Science Institute
+
+### Users
+#### Admin User
+- [x] Email: admin@example.com
+- [x] Password: password123
+- [x] Role: Administrator
+
+#### Student Users
+- [x] student1@example.com (password: password123)
+- [x] student2@example.com (password: password123)
+
+### Courses
+#### Tech Academy
+- [x] Introduction to Programming
+- [x] Web Development Fundamentals
+
+#### Code School
+- [x] Advanced React
+
+#### Data Science Institute
+- [x] Data Science Basics
+
+### Test Cases
+- [ ] Admin login and access verification
+- [ ] Student login and access verification
+- [ ] Organization assignment verification
+- [ ] Course enrollment verification
+- [ ] API endpoint permission testing
+
+## 7. Frontend Implementation
 - [x] Login page
 - [x] Protected courses page
   - [x] Available courses list
@@ -53,27 +98,27 @@
 - [x] TypeScript implementation
 - [x] UI styling
 
-## 7. Deployment & Configuration
+## 8. Deployment & Configuration
 - [x] Single command setup (`docker compose up`)
 - [x] Frontend accessible at http://localhost:5173
 - [x] Directus admin panel at http://localhost:8055
 - [ ] Working role-based permissions on first launch
 - [ ] All configurations functional out of the box
 
-## 8. Documentation
+## 9. Documentation
 - [x] Setup instructions in README.md
 - [ ] Schema snapshots documentation
 - [ ] Seed data documentation
 - [ ] Error handling documentation
 
-## 9. Testing
+## 10. Testing
 - [ ] Test admin role functionality
 - [ ] Test student role functionality
 - [ ] Test API endpoints
 - [ ] Test email notifications
 - [ ] Test multi-tenant functionality
 
-## 10. Submission
+## 11. Submission
 - [ ] Code review and cleanup
 - [ ] Final testing
 - [ ] Submit to:

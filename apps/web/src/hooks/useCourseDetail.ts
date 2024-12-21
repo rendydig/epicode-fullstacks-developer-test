@@ -26,7 +26,7 @@ export interface CourseDetail {
   id: string
   name: string
   description: string
-  organization_id: {
+  organization: {
     id: string
     name: string
   }

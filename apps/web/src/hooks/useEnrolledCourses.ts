@@ -10,7 +10,7 @@ export interface EnrolledCourse {
     id: string
     name: string
     description: string
-    organization_id: {
+    organization: {
       id: string
       name: string
     }

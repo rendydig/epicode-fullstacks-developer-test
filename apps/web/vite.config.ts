@@ -12,8 +12,8 @@ export default defineConfig({
     },
     hmr: {
       overlay: true,
-      // Only enable HMR in development
-      enabled: process.env.NODE_ENV === 'development'
+      clientPort: 5173,
+      host: 'localhost'
     }
-  },
+  }
 })

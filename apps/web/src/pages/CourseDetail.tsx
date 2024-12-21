@@ -63,7 +63,7 @@ export function CourseDetail() {
         {course.name}
       </Typography>
       <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        Organization: {course.organization_id.name}
+        Organization: {course.organization.name}
       </Typography>
       <Typography variant="body1" paragraph>
         {course.description}

@@ -39,7 +39,7 @@ export function Header() {
             )}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Typography variant="body1">
-                {user?.data?.email}
+                {user?.email}
               </Typography>
               <Button color="inherit" onClick={handleLogout}>
                 Logout

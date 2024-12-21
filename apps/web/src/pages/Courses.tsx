@@ -3,6 +3,7 @@ import {
   Container,
   Typography,
 } from '@mui/material'
+import { EnrolledCourses } from '../components/EnrolledCourses'
 
 function Courses() {
   return (
@@ -11,6 +12,7 @@ function Courses() {
         My Courses
       </Typography>
       
+      <EnrolledCourses />
     </Container>
   )
 }

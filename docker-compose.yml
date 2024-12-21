@@ -43,6 +43,7 @@ services:
     volumes:
       - ./directus/uploads:/directus/uploads
       - ./directus/extensions:/directus/extensions
+      - ./directus/logs:/directus/logs
     depends_on:
       postgres:
         condition: service_healthy

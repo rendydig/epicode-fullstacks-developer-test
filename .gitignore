@@ -42,7 +42,6 @@ yarn-error.log*
 # Directus
 directus/uploads/*
 !directus/uploads/.gitkeep
-directus/extensions/*
 !directus/extensions/.gitkeep
 
 # Database

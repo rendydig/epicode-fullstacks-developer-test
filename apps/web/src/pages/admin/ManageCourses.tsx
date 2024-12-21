@@ -29,13 +29,13 @@ export function ManageCourses() {
         field: 'organization',
         headerName: 'Organization',
         flex: 1,
-        valueGetter: (params) => params?.name
+        valueGetter: (organization:any) => organization.name
       },
       {
         field: 'actions',
         headerName: 'Actions',
         flex: 1,
-        renderCell: (params: GridRenderCellParams) => (
+        renderCell: (params: any) => (
           <Stack direction="row" spacing={1} alignItems="center" height="100%">
             <Button
               variant="outlined"
