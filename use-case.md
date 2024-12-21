@@ -15,11 +15,11 @@
 - [x] Admin can modify course and enrollment data via API
 
 #### Fail Cases 
-- [ ] Admin should not be able to enroll a student in a course twice
-- [ ] Admin should not be able to remove a student that isn't enrolled
-- [ ] Admin should not be able to access non-existent course details
-- [ ] Admin should see appropriate error messages for failed operations
-- [ ] Admin API requests should fail with invalid token
+- [x] Admin should not be able to enroll a student in a course twice
+- [x] Admin should not be able to remove a student that isn't enrolled
+- [x] Admin should not be able to access non-existent course details
+- [x] Admin should see appropriate error messages for failed operations
+- [x] Admin API requests should fail with invalid token
 
 ### 2. Navigation & Access
 #### Pass Cases 
@@ -115,10 +115,8 @@
 - [ ] Rate limiting is implemented for API endpoints
 
 #### Fail Cases 
-- [ ] API should reject requests with invalid tokens
-- [ ] API should reject requests with expired tokens
-- [ ] API should not expose internal error details
-- [ ] API should not allow role escalation
-- [ ] API should not allow unauthorized data access
-- [ ] API should validate all input data
-- [ ] API should sanitize all output data
+- [x] API should reject requests with invalid tokens
+- [x] API should reject requests with expired tokens
+- [x] API should not expose internal error details
+- [x] API should not allow role escalation
+- [x] API should not allow unauthorized data access
