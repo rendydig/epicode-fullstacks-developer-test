@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./dbbackup/directus_backup.dump:/docker-entrypoint-initdb.d/directus_backup.dump
+      - ./dbbackup/restore.sh:/docker-entrypoint-initdb.d/restore.sh
     ports:
       - "5432:5432"
     healthcheck:
@@ -15,20 +17,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  seeder:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_DATABASE}
-    volumes:
-      - ./dbbackup/directus_backup.dump:/directus_backup.dump
-      - ./dbbackup/restore.sh:/restore.sh
-    command: /restore.sh
-    depends_on:
-      postgres:
-        condition: service_healthy
 
   directus:
     image: directus/directus:11.3.5
