@@ -1,47 +1,38 @@
 import React from 'react'
-import { AppBar, Toolbar, Typography, Button, Box, Chip } from '@mui/material'
+import { Link, useNavigate } from 'react-router-dom'
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box
+} from '@mui/material'
 import { useAuth } from '../contexts/AuthContext'
-import { useNavigate, Link } from 'react-router-dom'
+import { isAdmin } from '../utils/roleChecks'
 
 export function Header() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+
   const handleLogout = async () => {
-    try {
-      await logout()
-      navigate('/login')
-    } catch (error) {
-      console.error('Error logging out:', error)
-    }
+    await logout()
+    navigate('/login')
   }
 
   return (
-    <AppBar position="static" color="default" elevation={1}>
+    <AppBar position="static">
       <Toolbar>
-        <Typography 
-          variant="h6" 
-          component={Link} 
-          to="/courses" 
-          sx={{ 
-            flexGrow: 1, 
-            textDecoration: 'none', 
-            color: 'inherit',
-            '&:hover': {
-              color: 'primary.main'
-            }
-          }}
-        >
+        <Typography variant="h6" component={Link} to="/" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
           Epicode
         </Typography>
         
         {user && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {user.data?.role?.name === 'admin' && (
+            {isAdmin(user) && (
               <Button 
                 color="inherit" 
                 component={Link} 
                 to="/admin/courses"
-                sx={{ '&:hover': { color: 'primary.main' } }}
               >
                 Manage Courses
               </Button>
@@ -50,17 +41,10 @@ export function Header() {
               <Typography variant="body1">
                 {user?.data?.email}
               </Typography>
-              <Chip 
-                label={user?.data?.role?.name || 'User'} 
-                size="small"
-                color="primary"
-                variant="outlined"
-                sx={{ textTransform: 'capitalize' }}
-              />
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
             </Box>
-            <Button color="inherit" onClick={handleLogout}>
-              Logout
-            </Button>
           </Box>
         )}
       </Toolbar>

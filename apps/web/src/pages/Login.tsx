@@ -6,10 +6,12 @@ import {
   TextField,
   Button,
   Typography,
+  Paper,
   Alert,
   CircularProgress
 } from '@mui/material'
 import { useAuth } from '../contexts/AuthContext'
+import { isAdmin } from '../utils/roleChecks'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -21,79 +23,58 @@ function Login() {
     e.preventDefault()
     try {
       await login(email, password)
-      const isAdmin = user?.data?.role?.name.toLowerCase() === 'admin'
-      navigate(isAdmin ? '/admin/courses' : '/courses')
+      isAuthenticated && navigate(isAdmin(user) ? '/admin/courses' : '/courses')
     } catch (err) {
       console.log({error: err})
     }
   }
+
   if (isAuthenticated) {
-    const isAdmin = user?.data?.role?.name.toLowerCase() === 'admin'
-    return <Navigate to={isAdmin ? '/admin/courses' : '/courses'} replace />
+    return <Navigate to={isAdmin(user) ? '/admin/courses' : '/courses'} replace />
   }
 
   return (
     <Container maxWidth="sm">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Sign in to your account
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+      <Box sx={{ mt: 8 }}>
+        <Paper sx={{ p: 4 }}>
+          <Typography variant="h4" component="h1" gutterBottom align="center">
+            Login
+          </Typography>
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
               {error}
             </Alert>
           )}
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={isLoading}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoading}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <CircularProgress size={20} color="inherit" />
-                <span>Signing in...</span>
-              </Box>
-            ) : (
-              'Sign In'
-            )}
-          </Button>
-        </Box>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              margin="normal"
+              required
+            />
+            <TextField
+              fullWidth
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              margin="normal"
+              required
+            />
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              sx={{ mt: 3 }}
+              disabled={isLoading}
+            >
+              {isLoading ? <CircularProgress size={24} /> : 'Login'}
+            </Button>
+          </form>
+        </Paper>
       </Box>
     </Container>
   )

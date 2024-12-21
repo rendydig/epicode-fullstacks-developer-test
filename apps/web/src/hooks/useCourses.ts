@@ -9,7 +9,7 @@ export const useCourses = () => {
   return useQuery({
     queryKey: ['courses'],
     queryFn: async () => {
-      const { data } = await api.get('/items/courses', {
+      const { data } = await api.get('/items/epicode_courses', {
         headers: {
           Authorization: `Bearer ${token}`
         },

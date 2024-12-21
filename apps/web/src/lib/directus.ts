@@ -65,9 +65,19 @@ export const isLoadingAtom = atom<boolean>(false)
 // Error state atom
 export const errorAtom = atom<string | null>(null)
 
+// Helper function to check if a user is an admin
+export function isAdmin(user: User | null): boolean {
+  return user?.role?.name?.toLowerCase() === 'admin' || user?.role?.name?.toLowerCase() === 'administrator'
+}
+
+// Helper function to check if a user is a student
+export function isStudent(user: User | null): boolean {
+  return user?.role?.name?.toLowerCase() === 'student'
+}
+
 // Helper atoms for role checks
-export const isAdminAtom = atom((get) => get(userAtom)?.role?.name?.toLocaleLowerCase() === 'admin')
-export const isStudentAtom = atom((get) => get(userAtom)?.role?.name?.toLocaleLowerCase() === 'student')
+export const isAdminAtom = atom((get) => isAdmin(get(userAtom)))
+export const isStudentAtom = atom((get) => isStudent(get(userAtom)))
 
 // Auth actions
 export const authActions = {
@@ -75,14 +85,14 @@ export const authActions = {
     try {
       const client = directus as AuthenticationClient<Schema>
       const auth = await client.login(email, password)
-      
+      let response: any;
       // Set the token for subsequent requests
       api.defaults.headers.common['Authorization'] = `Bearer ${auth.access_token}`
       
       // Fetch user data
       const user = await fetchCurrentUser()
-      
-      return { auth, user }
+      response = { auth, user }
+      return response;
     } catch (error) {
       console.error('Login error:', error)
       throw error

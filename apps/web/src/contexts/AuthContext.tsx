@@ -12,6 +12,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
   token: string | null
+  isAdmin: boolean
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -57,7 +58,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const authData = await authActions.login(email, password)
       console.log({authDataSet: authData})
-      setAuthData(authData)
+      if(authData) {
+        const user = await fetchCurrentUser()
+        authData.user = user
+        setAuthData(authData)
+      }
+     
     } catch (err) {
       console.error('Error during login:', err)
       setError(err instanceof Error ? err.message : 'Login failed')
@@ -82,6 +88,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const isAuthenticated = !!authData?.auth?.access_token && !isTokenExpired(authData)
   
+  const isAdmin = authData?.user?.data?.role?.name?.toLowerCase() === 'admin' || 
+                 authData?.user?.data?.role?.name?.toLowerCase() === 'administrator'
+  console.log({authData, isAuthenticated, isAdmin})
   const value = {
     user: authData?.user,
     isAuthenticated,
@@ -89,7 +98,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     token: isAuthenticated ? authData?.auth?.access_token : null,
     error,
     login,
-    logout
+    logout,
+    isAdmin
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

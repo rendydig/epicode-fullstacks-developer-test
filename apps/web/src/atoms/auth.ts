@@ -6,6 +6,7 @@ interface AuthData {
  auth: {
   access_token: string
   expires: number
+  expires_at: string
  }
  user: any
 }

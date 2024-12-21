@@ -1,12 +1,14 @@
-import React from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider } from './contexts/AuthContext'
-import Login from './pages/Login'
-import Courses from './pages/Courses'
-import { CourseDetail } from './pages/CourseDetail'
-import { ProtectedRoute } from './components/ProtectedRoute'
-import { Header } from './components/Header'
-import { ManageCourses } from './pages/admin/ManageCourses'
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import Login from "./pages/Login";
+import Courses from "./pages/Courses";
+import { CourseDetail } from "./pages/CourseDetail";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Header } from "./components/Header";
+import { ManageCourses } from "./pages/admin/ManageCourses";
+import { CourseDetailAdmin } from "./pages/admin/CourseDetailAdmin";
+import { RootRedirect } from "./components/RootRedirect";
 
 function App() {
   return (
@@ -38,10 +40,18 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/courses" replace />} />
+        <Route
+          path="/admin/courses/:courseId"
+          element={
+            <ProtectedRoute adminOnly>
+              <CourseDetailAdmin />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/" element={<RootRedirect />} />
       </Routes>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;

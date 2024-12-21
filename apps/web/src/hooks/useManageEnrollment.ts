@@ -3,33 +3,24 @@ import { api } from '../lib/directus'
 import { useAuth } from '../contexts/AuthContext'
 
 interface EnrollmentData {
-  user_id: string
   course_id: string
-  status: 'active' | 'inactive'
+  user_id: string
+  status?: 'enrolled' | 'completed' | 'dropped' | 'suspended'
+  progress?: number
 }
 
 export function useManageEnrollment() {
-  const { token } = useAuth()
   const queryClient = useQueryClient()
+  const { token } = useAuth()
 
   const enrollMutation = useMutation({
     mutationFn: async (data: EnrollmentData) => {
       const response = await api.post('/items/enrollments', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        data
-      })
-      return response.data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['enrolledCourses'] })
-    }
-  })
-
-  const unenrollMutation = useMutation({
-    mutationFn: async (enrollmentId: string) => {
-      const response = await api.delete(`/items/enrollments/${enrollmentId}`, {
+        course_id: data.course_id,
+        user_id: data.user_id,
+        status: data.status || 'enrolled',
+        progress: data.progress || 0
+      }, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -37,30 +28,43 @@ export function useManageEnrollment() {
       return response.data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['enrolledCourses'] })
+      queryClient.invalidateQueries({ queryKey: ['enrolledStudents'] })
     }
   })
 
-  const updateEnrollmentStatus = useMutation({
-    mutationFn: async ({ enrollmentId, status }: { enrollmentId: string, status: 'active' | 'inactive' }) => {
-      const response = await api.patch(`/items/enrollments/${enrollmentId}`, {
+  const removeMutation = useMutation({
+    mutationFn: async ({ courseId, userId }: { courseId: string; userId: string }) => {
+      // First, find the enrollment record
+      const { data } = await api.get('/items/enrollments', {
         headers: {
           Authorization: `Bearer ${token}`
         },
-        data: { status }
+        params: {
+          filter: {
+            course_id: { _eq: courseId },
+            user_id: { _eq: userId }
+          }
+        }
       })
-      return response.data
+
+      if (data.data && data.data.length > 0) {
+        // Delete the enrollment record
+        await api.delete(`/items/enrollments/${data.data[0].id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+      }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['enrolledCourses'] })
+      queryClient.invalidateQueries({ queryKey: ['enrolledStudents'] })
     }
   })
 
   return {
-    enrollStudent: enrollMutation.mutate,
-    unenrollStudent: unenrollMutation.mutate,
-    updateStatus: updateEnrollmentStatus.mutate,
-    isLoading: enrollMutation.isPending || unenrollMutation.isPending || updateEnrollmentStatus.isPending,
-    error: enrollMutation.error || unenrollMutation.error || updateEnrollmentStatus.error
+    enrollStudent: enrollMutation.mutateAsync,
+    removeStudent: removeMutation.mutateAsync,
+    isLoading: enrollMutation.isPending || removeMutation.isPending,
+    error: enrollMutation.error || removeMutation.error
   }
 }

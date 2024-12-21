@@ -39,7 +39,7 @@ export function useCourseDetail(courseId: string) {
   return useQuery({
     queryKey: ['courseDetail', courseId],
     queryFn: async () => {
-      const { data } = await api.get<{ data: CourseDetail }>(`/items/courses/${courseId}`, {
+      const { data } = await api.get<{ data: CourseDetail }>(`/items/epicode_courses/${courseId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         },
