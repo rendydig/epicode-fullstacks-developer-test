@@ -5,14 +5,14 @@
 ### 1. Course Management
 #### Pass Cases 
 - [x] Admin can view all courses across all organizations
-- [ ] Admin can access course details page for any course
-- [ ] Admin can see enrolled students in a course
-- [ ] Admin can enroll new students in a course
-- [ ] Admin can remove students from a course
-- [ ] Admin is automatically redirected to admin dashboard when accessing root URL
-- [ ] Admin can access `/items/epicode_courses` API endpoint
-- [ ] Admin can access `/items/enrollments` API endpoint
-- [ ] Admin can modify course and enrollment data via API
+- [x] Admin can access course details page for any course
+- [x] Admin can see enrolled students in a course
+- [x] Admin can enroll new students in a course
+- [x] Admin can remove students from a course
+- [x] Admin is automatically redirected to admin dashboard when accessing root URL
+- [x] Admin can access `/items/epicode_courses` API endpoint
+- [x] Admin can access `/items/enrollments` API endpoint
+- [x] Admin can modify course and enrollment data via API
 
 #### Fail Cases 
 - [ ] Admin should not be able to enroll a student in a course twice

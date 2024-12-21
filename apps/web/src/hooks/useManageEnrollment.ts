@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 interface EnrollmentData {
   course_id: string
   user_id: string
-  status?: 'enrolled' | 'completed' | 'dropped' | 'suspended'
+  status?: 'enrolled' | 'completed' | 'dropped' | 'suspended' | 'active'
   progress?: number
 }
 

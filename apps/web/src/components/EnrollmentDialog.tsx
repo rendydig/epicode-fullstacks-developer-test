@@ -9,7 +9,8 @@ import {
   Box,
   Typography,
   CircularProgress,
-  Autocomplete
+  Autocomplete,
+  Alert
 } from '@mui/material'
 import { useManageEnrollment } from '../hooks/useManageEnrollment'
 import { useSearchStudents } from '../hooks/useSearchStudents'
@@ -30,6 +31,7 @@ interface EnrollmentDialogProps {
 export function EnrollmentDialog({ open, courseId, onClose }: EnrollmentDialogProps) {
   const [searchEmail, setSearchEmail] = useState('')
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
+  const [enrollmentError, setEnrollmentError] = useState<string | null>(null)
   const { enrollStudent, isLoading: isEnrolling } = useManageEnrollment()
   const { data: students, isLoading: isSearching } = useSearchStudents(searchEmail)
 
@@ -44,8 +46,13 @@ export function EnrollmentDialog({ open, courseId, onClose }: EnrollmentDialogPr
         onClose()
         setSelectedStudent(null)
         setSearchEmail('')
-      } catch (error) {
-        console.error('Error enrolling student:', error)
+        setEnrollmentError(null)
+      } catch (error: any) {
+        if (error?.response?.data?.errors?.[0]?.extensions?.code === 'RECORD_NOT_UNIQUE') {
+          setEnrollmentError('This student is already enrolled in the course.')
+        } else {
+          setEnrollmentError('An error occurred while enrolling the student. Please try again.')
+        }
       }
     }
   }
@@ -54,12 +61,18 @@ export function EnrollmentDialog({ open, courseId, onClose }: EnrollmentDialogPr
     onClose()
     setSelectedStudent(null)
     setSearchEmail('')
+    setEnrollmentError(null)
   }
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Enroll Student</DialogTitle>
       <DialogContent sx={{ minWidth: 400 }}>
+        {enrollmentError && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {enrollmentError}
+          </Alert>
+        )}
         <Autocomplete
           fullWidth
           options={students || []}
@@ -76,7 +89,10 @@ export function EnrollmentDialog({ open, courseId, onClose }: EnrollmentDialogPr
           )}
           loading={isSearching}
           value={selectedStudent}
-          onChange={(_, newValue) => setSelectedStudent(newValue)}
+          onChange={(_, newValue) => {
+            setSelectedStudent(newValue)
+            setEnrollmentError(null)
+          }}
           onInputChange={(_, value) => setSearchEmail(value)}
           renderInput={(params) => (
             <TextField

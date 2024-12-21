@@ -46,7 +46,7 @@ export function AllCourses() {
                 {course.description}
               </Typography>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                Organization: {course.organization_id.name}
+                Organization: {course.organization.name}
               </Typography>
             </CardContent>
             <CardActions>

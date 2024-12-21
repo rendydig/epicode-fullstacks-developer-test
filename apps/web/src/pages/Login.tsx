@@ -25,7 +25,7 @@ function Login() {
       await login(email, password)
       isAuthenticated && navigate(isAdmin(user) ? '/admin/courses' : '/courses')
     } catch (err) {
-      console.log({error: err})
+      console.error({error: err})
     }
   }
 
