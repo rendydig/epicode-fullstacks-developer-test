@@ -112,10 +112,10 @@ export const authActions = {
 
   async logout() {
     try {
-      const client = directus as AuthenticationClient<Schema>;
-      await client.logout();
+      // const client = directus as AuthenticationClient<Schema>;
+      // await client.logout();
       // Clear the authorization header
-      delete api.defaults.headers.common["Authorization"];
+      // delete api.defaults.headers.common["Authorization"];
     } catch (error) {
       console.error("Logout error:", error);
       throw error;
@@ -144,7 +144,7 @@ export const authActions = {
 
 // Helper function to fetch current user
 export async function fetchCurrentUser() {
-  const { data } = await api.get<User>("/users/me", {
+  const { data } = await api.get<UserData>("/users/me", {
     params: {
       fields: [
         "id",

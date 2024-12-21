@@ -1,120 +1,268 @@
-# Educational Enrollment System
+# How to Run Epicode
 
-## Overview
-Build a multi-tenant enrollment system using:
-- Nx/Turborepo
-- Directus headless CMS
-- PostgreSQL
-- Docker
-- Bun package manager
-- React + Vite frontend
+This guide will help you run the Epicode application using Docker. The setup process is simplified and automated using Docker Compose.
 
-**Time Frame:** 2 days
+## Prerequisites
 
-## Core Requirements
+- [Docker](https://www.docker.com/) and Docker Compose
+- Git
 
-### 1. Setup Requirements
-- Complete docker-compose configuration
-- Directus schema snapshot included
-- Initial seed data for testing
-- Clear README.md with setup instructions
-- .env.example file
+## Quick Start
 
-### 2. Database Architecture
-Multi-tenant enrollment system with:
-- Organizations
-- Users (with multi-organization membership)
-- Courses
-- Enrollments
+1. **Clone the Repository**
+   ```bash
+   git clone <repository-url>
+   cd Epicode
+   ```
 
-### 3. User Roles & Permissions
-- Admin Role:
-  - Can enroll students in courses
-  - Can unenroll students from courses
-  - Can view all courses
-- Student Role:
-  - Can only view courses they have access to
-  - Cannot modify enrollments
+2. **Environment Setup**
+   ```bash
+   # Copy the example environment file
+   cp .env.example .env
+   ```
+   Edit the `.env` file with your desired credentials (or keep the defaults for local development).
 
-### 4. Directus Implementation
-- Custom TypeScript Extensions:
-  1. Protected API Endpoints:
-     - List available courses (both roles)
-     - Enroll in a course (admin only)
-     - Unenroll from a course (admin only)
-     - JWT authentication required
-  2. Hook for Enrollment Events:
-     - Email notification simulation
-     - Trigger on enrollment/unenrollment
+3. **Start the Application**
+   ```bash
+   docker compose up
+   ```
+   This single command will:
+   - Start PostgreSQL database
+   - Automatically restore the database with seed data
+   - Start Directus CMS
+   - Start the frontend application
 
-### 5. Frontend Implementation
-React + Vite application with:
-- Login page
-- Protected courses page showing:
-  - List of courses available to logged-in student
-  - Course details (name, description, organization)
-- JWT authentication integration
-- TypeScript
-- Basic styling (any UI library allowed)
+   > Note: During the first run, the seeder service will automatically populate the database with initial data. This process is automatic and you don't need to do anything extra.
 
-### 6. Deployment
-System must be ready to run with single command:
-```bash
-docker-compose up
-```
+## Accessing the Application
 
-## Sample Data
+Once all services are up and running:
 
-The application comes with pre-configured sample data for testing:
+- Frontend Application: http://localhost:5173
+- Directus CMS: http://localhost:8055
 
-### Organizations
-- Tech Academy
-- Code School
-- Data Science Institute
+## User Flows and Credentials
 
-### Users
-1. Admin User
+### Directus CMS Administrator
+- Email: superadmin@example.com
+- Password: admin123
+- Access: Full administrative access to Directus CMS
+- URL: http://localhost:8055/admin
+
+### Application Users
+
+1. **Administrator**
    - Email: admin@example.com
    - Password: password123
    - Role: Administrator
+   - Capabilities:
+     - Manage courses
+     - View all enrollments
+     - Manage users
+     - Access administrative features
 
-2. Student Users
-   - student1@example.com (password: password123)
-   - student2@example.com (password: password123)
+2. **Students**
+   - Student 1
+     - Email: student1@example.com
+     - Password: password123
+     - Role: Student
+     - Capabilities:
+       - View available courses
+       - Enroll in courses
+       - View enrolled courses
+       - Track progress
 
-### Courses
-1. Introduction to Programming (Tech Academy)
-2. Web Development Fundamentals (Tech Academy)
-3. Advanced React (Code School)
-4. Data Science Basics (Data Science Institute)
+   - Student 2
+     - Email: student2@example.com
+     - Password: password123
+     - Role: Student
+     - Capabilities:
+       - View available courses
+       - Enroll in courses
+       - View enrolled courses
+       - Track progress
 
-To reset the database with sample data:
-1. Stop all containers: `docker-compose down -v`
-2. Start the services again: `docker-compose up -d`
+## Testing Different User Flows
 
-The sample data will be automatically loaded when the PostgreSQL container initializes for the first time.
+1. **Administrator Flow**
+   - Log in as admin@example.com
+   - View all student enrollments
+   - View all courses
+   
 
-# Evaluation Points
+2. **Student Flow**
+   - Log in as student1@example.com or student2@example.com
+   - Browse available courses
+   - Enroll in courses
+   - View course materials
 
--  One-command setup functionality
--  Schema automation
--  Role-based access control
--  Frontend authentication flow
--  Documentation clarity
--  Code organization
--  Error handling
 
-## Submit to:
+## Viewing Enrolled Courses
 
--  ubeyt.demir@epicode.com
--  diego.banovaz@epicode.com
+### For Students
+1. **Access the Dashboard**
+   - Log in with your student account (student1@example.com or student2@example.com)
+   - You will be automatically redirected to the dashboard
 
-## Important Notes
+2. **View Enrolled Courses**
+   - Your enrolled courses are displayed on the dashboard
+   - Each course card shows:
+     - Course name
+     - Course description
+     - Organization name
+     - Enrollment status
+   - Click "Course Details" on any course card to view more information
 
--  Include schema snapshots for automatic table creation
--  Provide seed data for immediate testing
--  Clear `README.md` with setup instructions
--  Working role-based permissions on first launch
--  All configurations should work out of the box
--  Frontend should be accessible via [http://localhost:5173](http://localhost:5173)
--  Directus admin panel at [http://localhost:8055](http://localhost:8055)
+3. **Course Details View**
+   - Access detailed information about the course
+   - View course materials and content
+
+
+### For Administrators
+1. **Access Admin Dashboard**
+   - Log in with admin account (admin@example.com)
+   - Navigate to the admin dashboard
+
+2. **View All Courses**
+   - See a complete list of all student enrollments
+   - Filter and search through enrollments
+   - View enrollment status and progress
+
+3. **Manage Enrollments**
+   - View detailed enrollment information
+   - Add / remove students from courses
+
+## Administrator Guide
+
+### Managing Courses and Organizations
+
+1. **View All Courses**
+   - Log in as admin (admin@example.com)
+   - Navigate to "Courses" in the main menu
+   - You'll see a list of all courses with:
+     - Course name
+     - Organization
+     - Number of enrolled students
+     - Course status
+
+2. **Course Details**
+   - Click on any course to view detailed information
+   - View and edit:
+     - Course description
+     - Course materials
+     - Enrollment status
+     - Associated organization
+   - See list of enrolled students
+   - Access course analytics and progress reports
+
+3. **Organizations Management**
+   - Access "Organizations" from the main menu
+   - View all organizations in the system
+   - For each organization:
+     - See total number of courses
+     - View organization details
+     - Manage organization settings
+
+### Managing Student Enrollments
+
+1. **Enroll Students in Courses**
+   - Navigate to the specific course
+   - Click "Manage Enrollments" button
+   - Choose "Add Student" option
+   - You can:
+     - Search for students by email or name
+     - Select multiple students for batch enrollment
+     - Set enrollment status (active/pending)
+     - Add enrollment notes
+
+2. **Monitor and Manage Enrollments**
+   - View all current enrollments
+   - Filter enrollments by:
+     - Course
+     - Organization
+     - Enrollment status
+     - Date range
+   - Export enrollment data
+   - Generate enrollment reports
+
+## Docker Services
+
+The application consists of several Docker services:
+
+1. **PostgreSQL Database** (port 5432)
+   - Stores all application data
+   - Automatically initialized with seed data
+
+2. **Database Seeder**
+   - Runs automatically on first startup
+   - Populates the database with initial data
+   - Self-terminates after successful seeding
+
+3. **Directus CMS** (port 8055)
+   - Provides the backend API
+   - Handles authentication and data management
+
+4. **Frontend Application** (port 5173)
+   - React-based user interface
+   - Automatically connects to Directus
+
+## Common Commands
+
+```bash
+# Start all services
+docker compose up
+
+# Start services in detached mode
+docker compose up -d
+
+# View logs
+docker compose logs
+
+# View logs for a specific service
+docker compose logs [service-name]  # e.g., docker compose logs directus
+
+# Stop all services
+docker compose down
+
+# Rebuild and start services
+docker compose up --build
+
+# Remove all data and start fresh
+docker compose down -v
+docker compose up
+```
+
+## Troubleshooting
+
+1. **Services Not Starting**
+   ```bash
+   # Check service status
+   docker compose ps
+   
+   # Check service logs
+   docker compose logs
+   ```
+
+2. **Database Issues**
+   - If the database isn't seeding properly:
+     ```bash
+     # Remove volumes and restart
+     docker compose down -v
+     docker compose up
+     ```
+
+3. **Port Conflicts**
+   - Ensure ports 5432 (PostgreSQL), 8055 (Directus), and 5173 (Frontend) are available
+   - Check for conflicts:
+     ```bash
+     netstat -ano | findstr "5432 8055 5173"
+     ```
+
+4. **Container Health**
+   ```bash
+   # Check container health status
+   docker compose ps
+   
+   # Restart unhealthy containers
+   docker compose restart [service-name]
+   ```

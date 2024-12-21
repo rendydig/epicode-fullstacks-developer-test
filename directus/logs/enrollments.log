@@ -8,3 +8,13 @@ To: rendyadisaputra@gmail.com
 Subject: Welcome to Introduction to Programming!
 Body: Your enrollment has been confirmed.
 -------------------------------------------
+[2024-12-21T09:46:09.915Z]  New Enrollment:
+User: student1@example.com
+Course: Web Development Fundamentals
+Status: active
+
+Simulated email sent to:
+To: student1@example.com
+Subject: Welcome to Web Development Fundamentals!
+Body: Your enrollment has been confirmed.
+-------------------------------------------

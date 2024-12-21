@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  Grid,
+  Box,
   Card,
   CardContent,
   CardActions,
@@ -15,37 +15,38 @@ import { useNavigate } from 'react-router-dom'
 export function EnrolledCourses() {
   const { data: enrollments, isLoading } = useEnrolledCourses()
   const navigate = useNavigate()
+
   if (isLoading) {
     return (
-      <Grid container spacing={3}>
+      <Box display="flex" flexWrap="wrap" gap={3}>
         {[1, 2, 3].map((skeleton) => (
-          <Grid item xs={12} sm={6} md={4} key={skeleton}>
+          <Box key={skeleton} flexBasis={{ xs: '100%', sm: '45%', md: '30%' }}>
             <Card>
               <CardContent>
-                <Skeleton variant="text" width="60%" height={32} />
-                <Skeleton variant="text" width="80%" height={24} />
-                <Skeleton variant="text" width="40%" height={24} />
+                <Skeleton key={`skeleton-title-${skeleton}`} variant="text" width="60%" height={32} />
+                <Skeleton key={`skeleton-desc-${skeleton}`} variant="text" width="80%" height={24} />
+                <Skeleton key={`skeleton-org-${skeleton}`} variant="text" width="40%" height={24} />
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
     )
   }
 
   return (
-    <Grid container spacing={3}>
+    <Box display="flex" flexWrap="wrap" gap={3}>
       {enrollments?.map((enrollment) => (
-        <Grid item xs={12} sm={6} md={4} key={enrollment.id}>
+        <Box key={enrollment.id + enrollment.course_id.id} flexBasis={{ xs: '100%', sm: '45%', md: '30%' }}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography key={`title-${enrollment.id}`} variant="h6" gutterBottom>
                 {enrollment.course_id.name}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography key={`description-${enrollment.id}`} variant="body2" color="text.secondary">
                 {enrollment.course_id.description}
               </Typography>
-              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+              <Typography key={`org-${enrollment.id}`} variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
                 Organization: {enrollment.course_id.organization.name}
               </Typography>
               <Chip
@@ -67,8 +68,8 @@ export function EnrolledCourses() {
               </Button>
             </CardActions>
           </Card>
-        </Grid>
+        </Box>
       ))}
-    </Grid>
+    </Box>
   )
 }
