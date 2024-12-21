@@ -11,7 +11,6 @@ function Courses() {
       <Typography variant="h4" gutterBottom>
         My Courses
       </Typography>
-      
       <EnrolledCourses />
     </Container>
   )

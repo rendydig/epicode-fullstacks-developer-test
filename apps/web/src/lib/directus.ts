@@ -144,7 +144,7 @@ export const authActions = {
 
 // Helper function to fetch current user
 export async function fetchCurrentUser() {
-  const { data } = await api.get<User>("/users/me", {
+  const { data } = await api.get<UserData>("/users/me", {
     params: {
       fields: [
         "id",

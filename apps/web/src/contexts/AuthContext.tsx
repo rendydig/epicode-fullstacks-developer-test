@@ -3,6 +3,8 @@ import { useAtom } from 'jotai'
 import { authDataAtom, userAtom, isLoadingAtom, errorAtom } from '../atoms/auth'
 import { authActions, fetchCurrentUser, UserData, type User } from '../lib/directus'
 import { isTokenExpired } from '../lib/auth'
+import { isAdmin as checkIsAdmin } from '../utils/roleChecks'
+import { useNavigate } from 'react-router-dom'
 
 interface AuthContextType {
   user: UserData | null
@@ -25,6 +27,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [authData, setAuthData] = useAtom(authDataAtom)
   const [isLoading, setLoading] = useAtom(isLoadingAtom)
   const [error, setError] = useAtom(errorAtom)
+  const navigate = useNavigate()
 
   // Check token expiration periodically
   useEffect(() => {
@@ -54,13 +57,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (email: string, password: string) => {
     setLoading(true)
     setError(null)
-
+   
     try {
       const authData = await authActions.login(email, password)
       if(authData) {
         const user = await fetchCurrentUser()
         authData.user = user
         setAuthData(authData)
+        console.log({user})
+        const path = checkIsAdmin(user) ? '/admin/courses' : '/courses'
+        console.log({user, isAdmin: checkIsAdmin(user)})
+        navigate(path);
+        window.location.reload();
+        
       }
      
     } catch (err) {

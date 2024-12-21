@@ -16,10 +16,6 @@ import {
   CircularProgress,
   Button,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   ListItemIcon
 } from '@mui/material'
 import { PersonOutline, Delete, PlayCircleOutline as VideoIcon, Description as DocumentIcon, Quiz as QuizIcon, Assignment as AssignmentIcon } from '@mui/icons-material'
@@ -27,31 +23,7 @@ import { useCourseDetail } from '../../hooks/useCourseDetail'
 import { useEnrolledStudents } from '../../hooks/useEnrolledStudents'
 import { useManageEnrollment } from '../../hooks/useManageEnrollment'
 import { EnrollmentDialog } from '../../components/EnrollmentDialog'
-
-interface ConfirmDialogProps {
-  open: boolean
-  onClose: () => void
-  onConfirm: () => void
-  title: string
-  content: string
-}
-
-function ConfirmDialog({ open, onClose, onConfirm, title, content }: ConfirmDialogProps) {
-  return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <Typography>{content}</Typography>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={onConfirm} color="error" variant="contained">
-          Remove
-        </Button>
-      </DialogActions>
-    </Dialog>
-  )
-}
+import { ConfirmDialog } from '../../components/ConfirmDialog'
 
 export function CourseDetailAdmin() {
   const { courseId } = useParams<{ courseId: string }>()

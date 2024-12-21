@@ -23,7 +23,7 @@ function Login() {
     e.preventDefault()
     try {
       await login(email, password)
-      isAuthenticated && navigate(isAdmin(user) ? '/admin/courses' : '/courses')
+  
     } catch (err) {
       console.error({error: err})
     }
