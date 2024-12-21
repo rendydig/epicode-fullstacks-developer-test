@@ -21,10 +21,10 @@ export function useEnrolledStudents(courseId: string) {
           Authorization: `Bearer ${token}`
         },
         params: {
-          // filter: {
-          //   course_id: { _eq: courseId },
-          //   status: { _eq: 'active' }
-          // },
+          filter: {
+            course_id: { _eq: courseId },
+            status: { _eq: 'active' }
+          },
           fields: "*.*.*"
         }
       })

@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useEffect, useCallback, ReactNode } from 'react'
 import { useAtom } from 'jotai'
 import { authDataAtom, userAtom, isLoadingAtom, errorAtom } from '../atoms/auth'
-import { authActions, fetchCurrentUser, type User } from '../lib/directus'
+import { authActions, fetchCurrentUser, UserData, type User } from '../lib/directus'
 import { isTokenExpired } from '../lib/auth'
 
 interface AuthContextType {
-  user: User | null
+  user: UserData | null
   isAuthenticated: boolean
   isLoading: boolean
   error: string | null
@@ -57,7 +57,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     try {
       const authData = await authActions.login(email, password)
-      console.log({authDataSet: authData})
       if(authData) {
         const user = await fetchCurrentUser()
         authData.user = user
@@ -90,7 +89,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   
   const isAdmin = authData?.user?.data?.role?.name?.toLowerCase() === 'admin' || 
                  authData?.user?.data?.role?.name?.toLowerCase() === 'administrator'
-  console.log({authData, isAuthenticated, isAdmin})
   const value = {
     user: authData?.user,
     isAuthenticated,

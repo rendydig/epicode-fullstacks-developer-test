@@ -15,7 +15,6 @@ import { useNavigate } from 'react-router-dom'
 export function EnrolledCourses() {
   const { data: enrollments, isLoading } = useEnrolledCourses()
   const navigate = useNavigate()
-  console.log({enrollments})
   if (isLoading) {
     return (
       <Grid container spacing={3}>

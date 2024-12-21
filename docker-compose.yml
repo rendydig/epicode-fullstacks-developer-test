@@ -8,7 +8,8 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./directus/seeds.sql:/docker-entrypoint-initdb.d/seeds.sql
+      - ./dbbackup/directus_backup.dump:/docker-entrypoint-initdb.d/directus_backup.dump
+      - ./dbbackup/restore.sh:/docker-entrypoint-initdb.d/restore.sh
     ports:
       - "5432:5432"
     healthcheck:
