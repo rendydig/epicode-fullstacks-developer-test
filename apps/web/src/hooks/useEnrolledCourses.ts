@@ -23,7 +23,6 @@ export function useEnrolledCourses() {
   return useQuery({
     queryKey: ['enrolledCourses'],
     queryFn: async () => {
-      console.log("WHATT")
       const { data } = await api.get<{ data: EnrolledCourse[] }>('/items/enrollments', {
         headers: {
           Authorization: `Bearer ${token}`
