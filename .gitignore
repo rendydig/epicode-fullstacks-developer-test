@@ -40,9 +40,10 @@ yarn-error.log*
 .turbo
 
 # Directus
+directus/logs/*
 directus/uploads/*
 !directus/uploads/.gitkeep
 !directus/extensions/.gitkeep
-directus/logs/*
+
 # Database
 postgres_data/

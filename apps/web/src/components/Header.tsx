@@ -20,34 +20,41 @@ export function Header() {
   }
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" component={Link} to="/" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
-          Epicode
-        </Typography>
-        
-        {user && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {isAdmin(user) && (
-              <Button 
-                color="inherit" 
-                component={Link} 
-                to="/admin/courses"
-              >
-                Manage Courses
-              </Button>
-            )}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="body1">
-                {user?.email}
-              </Typography>
-              <Button color="inherit" onClick={handleLogout}>
-                Logout
-              </Button>
+    <Box component="header">
+      <AppBar position="static">
+        <Toolbar>
+          <Typography 
+            variant="h6" 
+            component={Link} 
+            to="/" 
+            sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}
+          >
+            Epicode
+          </Typography>
+          
+          {user && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              {isAdmin(user) && (
+                <Button 
+                  color="inherit" 
+                  component={Link} 
+                  to="/admin/courses"
+                >
+                  Manage Courses
+                </Button>
+              )}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="body1">
+                  {user?.email}
+                </Typography>
+                <Button color="inherit" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        )}
-      </Toolbar>
-    </AppBar>
+          )}
+        </Toolbar>
+      </AppBar>
+    </Box>
   )
 }

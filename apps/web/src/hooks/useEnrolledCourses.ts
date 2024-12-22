@@ -29,15 +29,12 @@ export function useEnrolledCourses() {
         },
         params: {
           fields: "*.*.*",
-          // filter: {
-          //   user_id: {
-          //     _eq: user?.data.id
-          //   }
-          // }
         }
       })
       return data.data
     },
-    enabled: !!token && isAuthenticated
+    gcTime: 0, // Disable caching (previously cacheTime)
+    staleTime: 0, // Mark data as immediately stale
+    enabled: isAuthenticated,
   })
 }
