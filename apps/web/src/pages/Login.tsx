@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
 import {
   Container,
   Box,
-  TextField,
   Button,
   Typography,
   Paper,
   Alert,
-  CircularProgress
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  OutlinedInput
 } from '@mui/material'
 import { useAuth } from '../contexts/AuthContext'
 import { isAdmin } from '../utils/roleChecks'
@@ -28,13 +30,13 @@ function Login() {
       console.error({error: err})
     }
   }
-
-  if (isAuthenticated) {
+  
+  if (!isLoading && isAuthenticated) {
     return <Navigate to={isAdmin(user) ? '/admin/courses' : '/courses'} replace />
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container component="main" maxWidth="sm">
       <Box sx={{ mt: 8 }}>
         <Paper sx={{ p: 4 }}>
           <Typography variant="h4" component="h1" gutterBottom align="center">
@@ -45,35 +47,40 @@ function Login() {
               {error}
             </Alert>
           )}
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              margin="normal"
-              required
-            />
-            <TextField
-              fullWidth
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              margin="normal"
-              required
-            />
+          <Box component="form" onSubmit={handleSubmit} noValidate>
+            <FormControl fullWidth margin="normal" variant="outlined">
+              <InputLabel htmlFor="email">Email</InputLabel>
+              <OutlinedInput
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                label="Email"
+                required
+                autoFocus
+              />
+            </FormControl>
+            <FormControl fullWidth margin="normal" variant="outlined">
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <OutlinedInput
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                label="Password"
+                required
+              />
+            </FormControl>
             <Button
-              fullWidth
               type="submit"
+              fullWidth
               variant="contained"
               sx={{ mt: 3 }}
               disabled={isLoading}
             >
               {isLoading ? <CircularProgress size={24} /> : 'Login'}
             </Button>
-          </form>
+          </Box>
         </Paper>
       </Box>
     </Container>
