@@ -52,7 +52,17 @@ services:
       CORS_ALLOWED_HEADERS: Content-Type,Authorization
       CORS_EXPOSED_HEADERS: Content-Range
       CORS_CREDENTIALS: true
+      EMAIL_ENV: ${EMAIL_ENV}
       CORS_MAX_AGE: 3600
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      EMAIL_TRANSPORT: smtp
+      EMAIL_MOCK: ${EMAIL_MOCK}
+
     volumes:
       - ./directus/uploads:/directus/uploads
       - ./directus/extensions:/directus/extensions

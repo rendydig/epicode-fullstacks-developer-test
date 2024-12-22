@@ -68,7 +68,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const path = checkIsAdmin(user) ? '/admin/courses' : '/courses'
         console.log({user, isAdmin: checkIsAdmin(user)})
         navigate(path);
-        window.location.reload();
+        // window.location.reload();
         
       }
      

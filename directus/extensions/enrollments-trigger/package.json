@@ -19,16 +19,20 @@
 		"host": "^10.1.14"
 	},
 	"scripts": {
-		"build": "directus-extension build",
-		"dev": "directus-extension build --watch",
-		"link": "directus-extension link"
+		"build": "env-cmd -f .env directus-extension build",
+		"dev": "env-cmd -f .env directus-extension build --watch",
+		"link": "env-cmd -f .env directus-extension link"
 	},
 	"devDependencies": {
 		"@directus/extensions-sdk": "10.1.14",
 		"@types/node": "^20.10.5",
+		"@types/nodemailer": "^6.4.14",
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
-		"create-directus-extension": "^11.0.7"
+		"create-directus-extension": "^11.0.7",
+		"dotenv": "^16.3.1",
+		"env-cmd": "^10.1.0",
+		"nodemailer": "^6.9.7"
 	}
 }
